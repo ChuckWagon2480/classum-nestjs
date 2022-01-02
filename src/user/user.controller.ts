@@ -68,6 +68,23 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Patch('/:userIdx/restore')
+  restoreUser(
+    @User() user: { userIdx: number },
+    @Param('userIdx', ParseIntPipe) userIdx: number,
+  ) {
+    if (user.userIdx != userIdx)
+      throw new HttpException(
+        {
+          success: false,
+          message: '접근할 수 없습니다.',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    return this.userService.restoreUser(userIdx);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/:userIdx')
   deleteUser(
     @User() user: { userIdx: number },

@@ -55,6 +55,21 @@ export class UserService {
     };
   }
 
+  async restoreUser(userIdx: number): Promise<object> {
+    const restoreResult = await this.userRepository.restore({
+      userIdx: userIdx,
+    });
+    if (restoreResult.affected == 0)
+      throw new HttpException(
+        {
+          success: false,
+          message: 'Not Found',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    else return { success: true, message: '계정이 복구되었습니다.' };
+  }
+
   async deleteUser(userIdx: number): Promise<object> {
     const deleteResult = await this.userRepository.softDelete({
       userIdx: userIdx,
