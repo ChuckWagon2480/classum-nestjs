@@ -11,12 +11,13 @@ export class UserRepository extends Repository<User> {
     return result;
   }
 
-  async selectUserByEmail(email: string): Promise<User[]> {
-    const users = await this.find({
+  async selectUserByEmail(email: string): Promise<User> {
+    const user = await this.findOne({
       where: { email: email },
-      select: ['userIdx', 'email', 'password'],
+      withDeleted: true,
+      select: ['userIdx', 'email', 'password', 'deletedAt'],
     });
-    return users;
+    return user;
   }
 
   async selectUserInfo(userIdx: number): Promise<User> {

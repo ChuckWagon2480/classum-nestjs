@@ -20,8 +20,8 @@ export class UserService {
   }
 
   async checkEmail(email: string): Promise<object> {
-    const result = await this.userRepository.selectUserByEmail(email);
-    if (result.length > 0)
+    const checkResult = await this.userRepository.selectUserByEmail(email);
+    if (checkResult)
       throw new HttpException(
         {
           success: false,
@@ -38,7 +38,7 @@ export class UserService {
       throw new HttpException(
         {
           success: false,
-          message: 'Not Found',
+          message: '회원정보를 찾을 수 없습니다.',
         },
         HttpStatus.NOT_FOUND,
       );
@@ -63,7 +63,7 @@ export class UserService {
       throw new HttpException(
         {
           success: false,
-          message: 'Not Found',
+          message: '회원정보를 찾을 수 없습니다.',
         },
         HttpStatus.NOT_FOUND,
       );
@@ -78,14 +78,14 @@ export class UserService {
       throw new HttpException(
         {
           success: false,
-          message: 'Not Found',
+          message: '회원정보를 찾을 수 없습니다.',
         },
         HttpStatus.NOT_FOUND,
       );
     else return { success: true, message: '회원 탈퇴되었습니다.' };
   }
 
-  async findOneByEmail(email: string): Promise<User[]> {
+  async findOneByEmail(email: string): Promise<User> {
     return this.userRepository.selectUserByEmail(email);
   }
 }

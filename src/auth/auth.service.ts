@@ -11,20 +11,28 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const users = await this.userService.findOneByEmail(email);
-    if (users.length < 1)
+    const user = await this.userService.findOneByEmail(email);
+    if (!user)
       throw new HttpException(
         {
           success: false,
-          message: 'Not Found',
+          message: '회원정보를 찾을 수 없습니다.',
         },
         HttpStatus.NOT_FOUND,
       );
-    const compareResult = await compare(password, users[0].password);
-    if (!users || (users && !compareResult)) {
+    else if (user.deletedAt !== null)
+      throw new HttpException(
+        {
+          success: false,
+          message: '탈퇴된 회원입니다.',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    const compareResult = await compare(password, user.password);
+    if (!compareResult) {
       return null;
     }
-    return users;
+    return user;
   }
 
   async login(user: any) {
