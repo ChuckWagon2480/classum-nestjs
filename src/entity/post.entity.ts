@@ -21,6 +21,9 @@ export class Post {
   @Column({ type: 'varchar', length: 1000 })
   content: string;
 
+  @Column({ type: 'enum', enum: ['Notice', 'Question'] })
+  category: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 

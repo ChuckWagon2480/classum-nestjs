@@ -1,4 +1,6 @@
+import { type } from 'os';
 import { Space } from 'src/entity/space.entity';
+import { User } from 'src/entity/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 
 @EntityRepository(Space)
@@ -51,5 +53,20 @@ export class SpaceRepository extends Repository<Space> {
       .withDeleted()
       .getOne();
     return result ? result.owner.userIdx : 0;
+  }
+
+  async selectMember(
+    spaceIdx: number,
+  ): Promise<{ ownerIdx: number; members: number[] }> {
+    const result = await this.createQueryBuilder('space')
+      .where('space.spaceIdx = :spaceIdx', { spaceIdx: `${spaceIdx}` })
+      .leftJoinAndSelect('space.users', 'users')
+      .leftJoinAndSelect('space.owner', 'owner')
+      .select(['users.userIdx as userIdx', 'owner.userIdx as ownerIdx'])
+      .getRawMany();
+
+    const rt: number[] = [];
+    result.map((user) => rt.push(user.userIdx));
+    return { ownerIdx: result[0].ownerIdx, members: rt };
   }
 }
