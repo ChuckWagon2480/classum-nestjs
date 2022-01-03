@@ -42,7 +42,11 @@ export class UserService {
         },
         HttpStatus.NOT_FOUND,
       );
-    return this.userRepository.selectUserInfo(userIdx);
+    return {
+      success: true,
+      message: '회원정보가 조회되었습니다.',
+      result: userInfo,
+    };
   }
 
   async updateUser(userIdx: number, user: UpdateUserDto): Promise<object> {
