@@ -1,6 +1,4 @@
-import { type } from 'os';
 import { Space } from 'src/entity/space.entity';
-import { User } from 'src/entity/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 
 @EntityRepository(Space)
