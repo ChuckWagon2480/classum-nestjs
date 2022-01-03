@@ -9,5 +9,6 @@ import { SpaceService } from './space.service';
   imports: [TypeOrmModule.forFeature([SpaceRepository, UserRepository])],
   controllers: [SpaceController],
   providers: [SpaceService],
+  exports: [SpaceService],
 })
 export class SpaceModule {}

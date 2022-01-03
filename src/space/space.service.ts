@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/entity/user.entity';
 import { SpaceRepository } from 'src/repository/space.repository';
 import { UserRepository } from 'src/repository/user.repository';
 import { CreateSpaceDto } from './dto/create-space.dto';
@@ -126,5 +127,11 @@ export class SpaceService {
 
   async findOwnerIdx(spaceIdx: number): Promise<number> {
     return await this.spaceRepository.selectOwnerIdx(spaceIdx);
+  }
+
+  async findMember(
+    spaceIdx: number,
+  ): Promise<{ ownerIdx: number; members: number[] }> {
+    return await this.spaceRepository.selectMember(spaceIdx);
   }
 }

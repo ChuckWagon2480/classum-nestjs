@@ -4,21 +4,25 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  ManyToMany,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Post } from './post.entity';
+import { Space } from './space.entity';
 
 @Entity()
-export class Space {
+export class Post {
   @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
-  spaceIdx: number;
+  postIdx: number;
 
   @Column({ type: 'varchar', length: 50 })
-  name: string;
+  title: string;
+
+  @Column({ type: 'varchar', length: 1000 })
+  content: string;
+
+  @Column({ type: 'enum', enum: ['Notice', 'Question'] })
+  category: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
@@ -29,12 +33,9 @@ export class Space {
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date | null;
 
-  @ManyToOne(() => User, (user) => user.ownSpaces, { onDelete: 'SET NULL' })
-  owner: User;
+  @ManyToOne(() => User, (user) => user.posts, { onDelete: 'SET NULL' })
+  writer: User;
 
-  @OneToMany(() => Post, (post) => post.space, { onDelete: 'SET NULL' })
-  posts: Post[];
-
-  @ManyToMany(() => User, (user) => user.spaces)
-  users: User[];
+  @ManyToOne(() => Space, (space) => space.posts, { onDelete: 'SET NULL' })
+  space: Space;
 }
