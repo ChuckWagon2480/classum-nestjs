@@ -15,6 +15,7 @@ export class SpaceRepository extends Repository<Space> {
       .addSelect('SUM(1)', 'memberCount')
       .leftJoin('space.users', 'users')
       .addGroupBy('space.spaceIdx')
+      .orderBy('space.createdAt', 'DESC')
       .getRawMany();
 
     return result;
@@ -40,6 +41,8 @@ export class SpaceRepository extends Repository<Space> {
         'users.lastName',
         'users.profileUrl',
       ])
+      .orderBy('users.lastName', 'ASC')
+      .addOrderBy('users.firstName', 'ASC')
       .getMany();
     return result;
   }
@@ -53,18 +56,13 @@ export class SpaceRepository extends Repository<Space> {
     return result ? result.owner.userIdx : 0;
   }
 
-  async selectMember(
-    spaceIdx: number,
-  ): Promise<{ ownerIdx: number; members: number[] }> {
+  async selectMember(spaceIdx: number): Promise<any[]> {
     const result = await this.createQueryBuilder('space')
       .where('space.spaceIdx = :spaceIdx', { spaceIdx: `${spaceIdx}` })
-      .leftJoinAndSelect('space.users', 'users')
-      .leftJoinAndSelect('space.owner', 'owner')
+      .leftJoin('space.users', 'users')
+      .leftJoin('space.owner', 'owner')
       .select(['users.userIdx as userIdx', 'owner.userIdx as ownerIdx'])
       .getRawMany();
-
-    const rt: number[] = [];
-    result.map((user) => rt.push(user.userIdx));
-    return { ownerIdx: result[0].ownerIdx, members: rt };
+    return result;
   }
 }

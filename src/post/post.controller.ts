@@ -49,14 +49,6 @@ export class PostController {
     return this.postService.createPost(user.userIdx, createPostData);
   }
 
-  // @Post('/join')
-  // joinPost(
-  //   @User() user: { userIdx: number },
-  //   @Body() joinPostData: JoinPostData,
-  // ) {
-  //   return this.postService.joinPost(user.userIdx, joinPostData.postIdx);
-  // }
-
   @Get()
   async getPostAll(
     @User() user: { userIdx: number },
@@ -69,7 +61,7 @@ export class PostController {
       throw new HttpException(
         {
           success: false,
-          message: '접근할 수 없습니다.',
+          message: '접근할 수 없습니다.(공간의 멤버가 아닙니다.)',
         },
         HttpStatus.FORBIDDEN,
       );
@@ -77,9 +69,21 @@ export class PostController {
   }
 
   @Get('/:postIdx')
-  getPostDetail(
+  async getPostDetail(
+    @User() user: { userIdx: number },
     @Param('postIdx', ParseIntPipe) postIdx: number,
   ): Promise<object> {
+    const spaceIdx = await this.postService.findSpaceIdx(postIdx);
+    const { members } = await this.spaceService.findMember(spaceIdx);
+
+    if (!members.includes(user.userIdx))
+      throw new HttpException(
+        {
+          success: false,
+          message: '접근할 수 없습니다.(공간의 멤버가 아닙니다.)',
+        },
+        HttpStatus.FORBIDDEN,
+      );
     return this.postService.readPostDetail(postIdx);
   }
 

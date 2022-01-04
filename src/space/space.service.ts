@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entity/user.entity';
 import { SpaceRepository } from 'src/repository/space.repository';
 import { UserRepository } from 'src/repository/user.repository';
 import { CreateSpaceDto } from './dto/create-space.dto';
@@ -22,6 +21,14 @@ export class SpaceService {
       { userIdx },
       { relations: ['spaces'] },
     );
+    if (!user)
+      throw new HttpException(
+        {
+          success: false,
+          message: '접근할 수 없는 사용자입니다.',
+        },
+        HttpStatus.NOT_FOUND,
+      );
     const space = await this.spaceRepository.save({ name: name, owner: user });
     user.spaces.push(space);
     await this.userRepository.save(user);
@@ -132,6 +139,17 @@ export class SpaceService {
   async findMember(
     spaceIdx: number,
   ): Promise<{ ownerIdx: number; members: number[] }> {
-    return await this.spaceRepository.selectMember(spaceIdx);
+    const result = await this.spaceRepository.selectMember(spaceIdx);
+    if (result.length == 0)
+      throw new HttpException(
+        {
+          success: false,
+          message: '공간을 찾을 수 없습니다.',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    const rt: number[] = [];
+    result.map((user) => rt.push(user.userIdx));
+    return { ownerIdx: result[0].ownerIdx, members: rt };
   }
 }
