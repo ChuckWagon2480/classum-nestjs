@@ -15,6 +15,7 @@ import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Space } from './space.entity';
 import { Post } from './post.entity';
+import { Chat } from './chat.entity';
 
 @Entity()
 export class User {
@@ -50,6 +51,9 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.writer, { nullable: true })
   posts: Post[];
+
+  @OneToMany(() => Chat, (chat) => chat.writer, { nullable: true })
+  chats: Chat[];
 
   @ManyToMany(() => Space, (space) => space.users)
   @JoinTable({

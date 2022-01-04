@@ -132,4 +132,8 @@ export class PostService {
   async findWriterIdx(postIdx: number): Promise<number> {
     return await this.postRepository.selectWriterIdx(postIdx);
   }
+
+  async findSpaceIdx(postIdx: number): Promise<number> {
+    return await this.postRepository.selectSpaceIdx(postIdx);
+  }
 }

@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { SpaceModule } from './space/space.module';
 import { PostModule } from './post/post.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { PostModule } from './post/post.module';
     AuthModule,
     SpaceModule,
     PostModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

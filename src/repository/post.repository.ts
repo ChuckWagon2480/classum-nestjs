@@ -46,4 +46,14 @@ export class PostRepository extends Repository<Post> {
       .getOne();
     return result ? result.writer.userIdx : 0;
   }
+
+  async selectSpaceIdx(postIdx: number): Promise<number> {
+    const result = await this.createQueryBuilder('post')
+      .where('post.postIdx = :postIdx', { postIdx: `${postIdx}` })
+      .select('post.spaceSpaceIdx as spaceIdx')
+      .withDeleted()
+      .getRawOne();
+
+    return result ? result.spaceIdx : 0;
+  }
 }

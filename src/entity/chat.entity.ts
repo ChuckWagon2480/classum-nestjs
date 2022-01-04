@@ -9,22 +9,15 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Space } from './space.entity';
-import { Chat } from './chat.entity';
+import { Post } from './post.entity';
 
 @Entity()
-export class Post {
+export class Chat {
   @PrimaryGeneratedColumn({ type: 'int', unsigned: true })
-  postIdx: number;
+  chatIdx: number;
 
   @Column({ type: 'varchar', length: 50 })
-  title: string;
-
-  @Column({ type: 'varchar', length: 1000 })
   content: string;
-
-  @Column({ type: 'enum', enum: ['Notice', 'Question'] })
-  category: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
@@ -35,12 +28,15 @@ export class Post {
   @DeleteDateColumn({ type: 'timestamp' })
   deletedAt: Date | null;
 
-  @ManyToOne(() => User, (user) => user.posts, { onDelete: 'SET NULL' })
+  @OneToMany(() => Chat, (chat) => chat.parent)
+  rechat: Chat[];
+
+  @ManyToOne(() => Chat, (chat) => chat.rechat, { onDelete: 'SET NULL' })
+  parent: Chat;
+
+  @ManyToOne(() => User, (user) => user.chats, { onDelete: 'SET NULL' })
   writer: User;
 
-  @ManyToOne(() => Space, (space) => space.posts, { onDelete: 'SET NULL' })
-  space: Space;
-
-  @OneToMany(() => Chat, (chat) => chat.post, { nullable: true })
-  chats: Chat[];
+  @ManyToOne(() => Post, (post) => post.chats, { onDelete: 'SET NULL' })
+  post: Post;
 }
