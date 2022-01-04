@@ -49,14 +49,6 @@ export class PostController {
     return this.postService.createPost(user.userIdx, createPostData);
   }
 
-  // @Post('/join')
-  // joinPost(
-  //   @User() user: { userIdx: number },
-  //   @Body() joinPostData: JoinPostData,
-  // ) {
-  //   return this.postService.joinPost(user.userIdx, joinPostData.postIdx);
-  // }
-
   @Get()
   async getPostAll(
     @User() user: { userIdx: number },

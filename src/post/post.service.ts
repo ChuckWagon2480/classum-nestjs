@@ -36,19 +36,6 @@ export class PostService {
     return { success: true, message: '게시글 생성에 성공했습니다.' };
   }
 
-  // async joinPost(userIdx: number, postIdx: number): Promise<object> {
-  //   const user = await this.userRepository.findOne(
-  //     { userIdx },
-  //     { relations: ['posts'] },
-  //   );
-  //   const post = await this.postRepository.findOne({ postIdx });
-
-  //   user.posts.push(post);
-  //   await this.userRepository.save(user);
-
-  //   return { success: true, message: '게시물 참여에 성공했습니다.' };
-  // }
-
   async readPostAll(spaceIdx: number, keyword: string): Promise<object> {
     const posts = await this.postRepository.selectPostAll(spaceIdx, keyword);
 

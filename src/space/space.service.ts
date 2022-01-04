@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/entity/user.entity';
 import { SpaceRepository } from 'src/repository/space.repository';
 import { UserRepository } from 'src/repository/user.repository';
 import { CreateSpaceDto } from './dto/create-space.dto';
