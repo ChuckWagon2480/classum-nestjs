@@ -46,9 +46,20 @@ export class SpaceController {
   }
 
   @Get('/:spaceIdx')
-  getSpaceDetail(
+  async getSpaceDetail(
+    @User() user: { userIdx: number },
     @Param('spaceIdx', ParseIntPipe) spaceIdx: number,
   ): Promise<object> {
+    const { members } = await this.spaceService.findMember(spaceIdx);
+
+    if (!members.includes(user.userIdx))
+      throw new HttpException(
+        {
+          success: false,
+          message: '접근할 수 없습니다.(공간의 멤버가 아닙니다.)',
+        },
+        HttpStatus.FORBIDDEN,
+      );
     return this.spaceService.readSpaceDetail(spaceIdx);
   }
 

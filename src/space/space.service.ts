@@ -21,6 +21,14 @@ export class SpaceService {
       { userIdx },
       { relations: ['spaces'] },
     );
+    if (!user)
+      throw new HttpException(
+        {
+          success: false,
+          message: '접근할 수 없는 사용자입니다.',
+        },
+        HttpStatus.NOT_FOUND,
+      );
     const space = await this.spaceRepository.save({ name: name, owner: user });
     user.spaces.push(space);
     await this.userRepository.save(user);
