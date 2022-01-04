@@ -129,8 +129,10 @@ export class PostController {
     @User() user: { userIdx: number },
     @Param('postIdx', ParseIntPipe) postIdx: number,
   ) {
-    const writerIdx = await this.postService.findWriterIdx(postIdx);
-    if (user.userIdx != writerIdx)
+    const { writerIdx, ownerIdx } =
+      await this.postService.findWriterAndOwnerIdx(postIdx);
+
+    if (user.userIdx != writerIdx && user.userIdx != ownerIdx)
       throw new HttpException(
         {
           success: false,
