@@ -134,6 +134,15 @@ export class PostService {
   }
 
   async findSpaceIdx(postIdx: number): Promise<number> {
-    return await this.postRepository.selectSpaceIdx(postIdx);
+    const result = await this.postRepository.selectSpaceIdx(postIdx);
+    if (!result || result.deletedAt)
+      throw new HttpException(
+        {
+          success: false,
+          message: '게시물 혹은 공간을 찾을 수 없습니다.',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    return result.spaceIdx;
   }
 }
