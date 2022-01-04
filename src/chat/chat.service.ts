@@ -100,4 +100,19 @@ export class ChatService {
   async findWriterIdx(chatIdx: number): Promise<number> {
     return await this.chatRepository.selectWriterIdx(chatIdx);
   }
+
+  async findWriterAndOwnerIdx(
+    chatIdx: number,
+  ): Promise<{ writerIdx: number; ownerIdx: number }> {
+    const result = await this.chatRepository.selectWriterAndOwnerIdx(chatIdx);
+    if (!result)
+      throw new HttpException(
+        {
+          success: false,
+          message: '댓글을 찾을 수 없습니다.',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    return result;
+  }
 }

@@ -87,8 +87,9 @@ export class ChatController {
     @User() user: { userIdx: number },
     @Param('chatIdx', ParseIntPipe) chatIdx: number,
   ) {
-    const writerIdx = await this.chatService.findWriterIdx(chatIdx);
-    if (user.userIdx != writerIdx)
+    const { writerIdx, ownerIdx } =
+      await this.chatService.findWriterAndOwnerIdx(chatIdx);
+    if (user.userIdx != writerIdx && user.userIdx != ownerIdx)
       throw new HttpException(
         {
           success: false,

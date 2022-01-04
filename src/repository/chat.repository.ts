@@ -41,10 +41,20 @@ export class ChatRepository extends Repository<Chat> {
   async selectWriterIdx(chatIdx: number): Promise<number> {
     const result = await this.createQueryBuilder('chat')
       .where('chat.chatIdx = :chatIdx', { chatIdx: `${chatIdx}` })
-      // .leftJoinAndSelect('chat.writer', 'writer')
       .select('chat.writer')
       .withDeleted()
       .getRawOne();
     return result ? result.writerUserIdx : 0;
+  }
+
+  async selectWriterAndOwnerIdx(chatIdx: number): Promise<any> {
+    const result = await this.createQueryBuilder('chat')
+      .where('chat.chatIdx = :chatIdx', { chatIdx: `${chatIdx}` })
+      .leftJoin('chat.post', 'post')
+      .leftJoin('post.space', 'space')
+      .select(['chat.writer as writerIdx', 'space.owner as ownerIdx'])
+      .withDeleted()
+      .getRawOne();
+    return result;
   }
 }

@@ -78,4 +78,14 @@ export class PostRepository extends Repository<Post> {
 
     return result;
   }
+
+  async selectWriterAndOwnerIdx(postIdx: number): Promise<any> {
+    const result = await this.createQueryBuilder('post')
+      .where('post.postIdx = :postIdx', { postIdx: `${postIdx}` })
+      .leftJoin('post.space', 'space')
+      .select(['post.writer as writerIdx', 'space.owner as ownerIdx'])
+      .withDeleted()
+      .getRawOne();
+    return result;
+  }
 }
