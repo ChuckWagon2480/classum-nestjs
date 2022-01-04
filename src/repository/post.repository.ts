@@ -21,6 +21,7 @@ export class PostRepository extends Repository<Post> {
         'post.createdAt as createdAt',
         'post.updatedAt as updatedAt',
       ])
+      .orderBy('post.createdAt', 'DESC')
       .getRawMany();
     return result;
   }

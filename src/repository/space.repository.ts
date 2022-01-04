@@ -15,6 +15,7 @@ export class SpaceRepository extends Repository<Space> {
       .addSelect('SUM(1)', 'memberCount')
       .leftJoin('space.users', 'users')
       .addGroupBy('space.spaceIdx')
+      .orderBy('space.createdAt', 'DESC')
       .getRawMany();
 
     return result;
@@ -40,6 +41,8 @@ export class SpaceRepository extends Repository<Space> {
         'users.lastName',
         'users.profileUrl',
       ])
+      .orderBy('users.lastName', 'ASC')
+      .addOrderBy('users.firstName', 'ASC')
       .getMany();
     return result;
   }
