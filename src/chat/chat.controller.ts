@@ -83,57 +83,55 @@ export class ChatController {
   //   return this.chatService.readChatDetail(chatIdx);
   // }
 
-  // @Patch('/:chatIdx')
-  // async patchChat(
-  //   @User() user: { userIdx: number },
-  //   @Param('chatIdx', ParseIntPipe) chatIdx: number,
-  //   @Body() updateChatData: UpdateChatDto,
-  // ) {
-  //   const writerIdx = await this.chatService.findWriterIdx(chatIdx);
-  //   if (user.userIdx != writerIdx)
-  //     throw new HttpException(
-  //       {
-  //         success: false,
-  //         message: '접근할 수 없습니다.',
-  //       },
-  //       HttpStatus.FORBIDDEN,
-  //     );
+  @Patch('/:chatIdx')
+  async patchChat(
+    @User() user: { userIdx: number },
+    @Param('chatIdx', ParseIntPipe) chatIdx: number,
+    @Body() updateChatData: UpdateChatDto,
+  ) {
+    const writerIdx = await this.chatService.findWriterIdx(chatIdx);
+    if (user.userIdx != writerIdx)
+      throw new HttpException(
+        {
+          success: false,
+          message: '접근할 수 없습니다.',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    return this.chatService.updateChat(chatIdx, updateChatData);
+  }
 
-  //   delete updateChatData.category;
-  //   return this.chatService.updateChat(chatIdx, updateChatData);
-  // }
+  @Patch('/:chatIdx/restore')
+  async restoreChat(
+    @User() user: { userIdx: number },
+    @Param('chatIdx', ParseIntPipe) chatIdx: number,
+  ) {
+    const writerIdx = await this.chatService.findWriterIdx(chatIdx);
+    if (user.userIdx != writerIdx)
+      throw new HttpException(
+        {
+          success: false,
+          message: '접근할 수 없습니다.',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    return this.chatService.restoreChat(chatIdx);
+  }
 
-  // @Patch('/:chatIdx/restore')
-  // async restoreChat(
-  //   @User() user: { userIdx: number },
-  //   @Param('chatIdx', ParseIntPipe) chatIdx: number,
-  // ) {
-  //   const writerIdx = await this.chatService.findWriterIdx(chatIdx);
-  //   if (user.userIdx != writerIdx)
-  //     throw new HttpException(
-  //       {
-  //         success: false,
-  //         message: '접근할 수 없습니다.',
-  //       },
-  //       HttpStatus.FORBIDDEN,
-  //     );
-  //   return this.chatService.restoreChat(chatIdx);
-  // }
-
-  // @Delete('/:chatIdx')
-  // async deleteChat(
-  //   @User() user: { userIdx: number },
-  //   @Param('chatIdx', ParseIntPipe) chatIdx: number,
-  // ) {
-  //   const writerIdx = await this.chatService.findWriterIdx(chatIdx);
-  //   if (user.userIdx != writerIdx)
-  //     throw new HttpException(
-  //       {
-  //         success: false,
-  //         message: '접근할 수 없습니다.',
-  //       },
-  //       HttpStatus.FORBIDDEN,
-  //     );
-  //   return this.chatService.deleteChat(chatIdx);
-  // }
+  @Delete('/:chatIdx')
+  async deleteChat(
+    @User() user: { userIdx: number },
+    @Param('chatIdx', ParseIntPipe) chatIdx: number,
+  ) {
+    const writerIdx = await this.chatService.findWriterIdx(chatIdx);
+    if (user.userIdx != writerIdx)
+      throw new HttpException(
+        {
+          success: false,
+          message: '접근할 수 없습니다.',
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    return this.chatService.deleteChat(chatIdx);
+  }
 }

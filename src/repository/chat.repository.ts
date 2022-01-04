@@ -41,9 +41,10 @@ export class ChatRepository extends Repository<Chat> {
   async selectWriterIdx(chatIdx: number): Promise<number> {
     const result = await this.createQueryBuilder('chat')
       .where('chat.chatIdx = :chatIdx', { chatIdx: `${chatIdx}` })
-      .leftJoinAndSelect('chat.writer', 'writer')
+      // .leftJoinAndSelect('chat.writer', 'writer')
+      .select('chat.writer')
       .withDeleted()
-      .getOne();
-    return result ? result.writer.userIdx : 0;
+      .getRawOne();
+    return result ? result.writerUserIdx : 0;
   }
 }
