@@ -132,6 +132,17 @@ export class SpaceService {
   async findMember(
     spaceIdx: number,
   ): Promise<{ ownerIdx: number; members: number[] }> {
-    return await this.spaceRepository.selectMember(spaceIdx);
+    const result = await this.spaceRepository.selectMember(spaceIdx);
+    if (result.length == 0)
+      throw new HttpException(
+        {
+          success: false,
+          message: '공간을 찾을 수 없습니다.',
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    const rt: number[] = [];
+    result.map((user) => rt.push(user.userIdx));
+    return { ownerIdx: result[0].ownerIdx, members: rt };
   }
 }
